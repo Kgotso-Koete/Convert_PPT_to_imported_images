@@ -1,11 +1,12 @@
-Sub Convert_PPT_to_imported_images()
+Sub Convert_PPT_to_imported_images()  
     'PURPOSE: convert
     'SOURCE: https://github.com/Kgotso-Koete/Convert_PPT_to_imported_images
     
     'Get current file's directory path
-    'https://stackoverflow.com/questions/12546181/vba-powerpoint-how-to-get-files-current-directory-path-to-a-string-in-vba
+    'SOURCE: https://stackoverflow.com/questions/12546181/vba-powerpoint-how-to-get-files-current-directory-path-to-a-string-in-vba
     Dim sPath As String
     Dim strFolder As String
+    Dim newSaveFile As String
     
     sPath = ActivePresentation.path & "\"
     If Len(sPath) > 0 Then
@@ -26,7 +27,21 @@ Sub Convert_PPT_to_imported_images()
     Call Deleteslides
     Call BatchImportImages(sPath)
     Call DeleteImages(sPath)
-
+    
+    ' Delete the temp folder
+    ' SOURCE: https://www.vbsedit.com/html/7991e577-f2ac-4b33-8231-761971d6c0d9.asp
+    Dim fso
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    fso.DeleteFolder (strFolder)
+    
+    'Get name of path of presentation without file extension
+    ' SOURCE: https://www.excel-easy.com/vba/string-manipulation.html
+    newSaveFile = Left(Application.ActivePresentation.FullName, InStr(Application.ActivePresentation.FullName, ".pptm") - 1) & "_CONVERTED.ppt"
+    ActivePresentation.SaveCopyAs FileName:=newSaveFile
+    
+    'Open new saved presentation and close current one
+    Presentations.Open FileName:=newSaveFile
+    
 End Sub
  
 
@@ -158,3 +173,5 @@ Private Function DeleteImages(ByVal strDirectory As String)
     objFSO.DeleteFile (DeleteLocation), DeleteReadOnly
 
 End Function
+ 
+
