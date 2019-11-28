@@ -1,4 +1,3 @@
-Attribute VB_Name = "Module2"
 Sub Convert_PPT_to_imported_images()
     'PURPOSE: convert
     'SOURCE: https://github.com/Kgotso-Koete/Convert_PPT_to_imported_images
@@ -6,13 +5,23 @@ Sub Convert_PPT_to_imported_images()
     'Get current file's directory path
     'https://stackoverflow.com/questions/12546181/vba-powerpoint-how-to-get-files-current-directory-path-to-a-string-in-vba
     Dim sPath As String
+    Dim strFolder As String
+    
     sPath = ActivePresentation.path & "\"
     If Len(sPath) > 0 Then
-        MsgBox ActivePresentation.Name & vbNewLine & "saved under" & vbNewLine & sPath
+        MsgBox "Converting " & ActivePresentation.Name & vbNewLine & "to image presentation"
     Else
         MsgBox "File not saved"
     End If
      
+    ' Create a new folder to be used to save images and deleted later
+    ' SOURCE: https://www.oreilly.com/library/view/vbscript-in-a/0596004885/re69.html
+    Dim oFileSys
+    Dim oFolder
+    strFolder = sPath & "Convert_folder_18926"
+    Set oFileSys = CreateObject("Scripting.FileSystemObject")
+    Set oFolder = oFileSys.CreateFolder(strFolder)
+         
     Call SaveSlidesAsImages(sPath)
     Call Deleteslides
     Call BatchImportImages(sPath)
