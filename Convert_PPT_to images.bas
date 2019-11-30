@@ -1,4 +1,7 @@
-Sub Make_all_presos_images()
+Sub CommandButton1_Click()
+    Call Make_all_presos_images
+End Sub
+Private Sub Make_all_presos_images()
 ' Run a macro of your choosing on each presentation in a folder
 ' SOURCE: http://www.pptfaq.com/FAQ00536_Batch-_Do_something_to_every_file_in_a_folder.htm
 
@@ -7,9 +10,9 @@ Sub Make_all_presos_images()
     Dim FileSpec
     Dim strTemp As String
     Dim x As Long
-
+ 
     ' EDIT THESE to suit your situation
-    FolderPath = "C:\Users\Kgotso_Koete\Desktop\Test folder\source files\"  ' Note: MUST end in \
+    FolderPath = GetFolder() & "\"  ' Note: MUST end in \
     FileSpec = "*.ppt"
     ' END OF EDITS
 
@@ -161,5 +164,19 @@ NoSlideSelection:
     fso.DeleteFolder (strFolder)
     
 End Function
-
- 
+Function GetFolder() As String
+    'SOURCE: https://stackoverflow.com/a/33411223
+    Dim fldr As FileDialog
+    Dim sItem As String
+    Set fldr = Application.FileDialog(msoFileDialogFolderPicker)
+    With fldr
+        .Title = "Select a Folder"
+        .AllowMultiSelect = False
+        '.InitialFileName = strPath
+        If .Show <> -1 Then GoTo NextCode
+        sItem = .SelectedItems(1)
+    End With
+NextCode:
+    GetFolder = sItem
+    Set fldr = Nothing
+End Function
