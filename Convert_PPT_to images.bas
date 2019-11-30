@@ -77,8 +77,6 @@ Sub Convert_PPT_to_imported_images()
         'Loop through each selected slide
         'Dim objPresentation As Presentation
         Dim objSlide As Slide
-         
-        'Set objPresentation = Presentations.Open(newSaveFile)
     
       For x = 0 To (SelectedSlides.Count - 1)
         'Store each slide to a variable
