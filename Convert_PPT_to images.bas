@@ -41,7 +41,7 @@ Sub Convert_PPT_to_imported_images()
       
     'Set variable equal to only selected slides in Active Presentation
       On Error GoTo NoSlideSelection
-        Set SelectedSlides = ActiveWindow.Selection.SlideRange
+        Set SelectedSlides = ActivePresentation.Slides.Range
       On Error GoTo 0
     
     'Loop through each selected slide
