@@ -1,4 +1,59 @@
-Sub Convert_PPT_to_imported_images()
+Sub Make_all_presos_images()
+' Run a macro of your choosing on each presentation in a folder
+' SOURCE: http://www.pptfaq.com/FAQ00536_Batch-_Do_something_to_every_file_in_a_folder.htm
+
+    Dim rayFileList() As String
+    Dim FolderPath As String
+    Dim FileSpec
+    Dim strTemp As String
+    Dim x As Long
+
+    ' EDIT THESE to suit your situation
+    FolderPath = "C:\Users\Kgotso_Koete\Desktop\Test folder\source files\"  ' Note: MUST end in \
+    FileSpec = "*.ppt"
+    ' END OF EDITS
+
+    ' Fill the array with files that meet the spec above
+    ReDim rayFileList(1 To 1) As String
+    strTemp = Dir$(FolderPath & FileSpec)
+    While strTemp <> ""
+        rayFileList(UBound(rayFileList)) = FolderPath & strTemp
+        ReDim Preserve rayFileList(1 To UBound(rayFileList) + 1) As String
+        strTemp = Dir
+    Wend
+
+    ' array has one blank element at end - don't process it
+    ' don't do anything if there's less than one element
+    If UBound(rayFileList) > 1 Then
+        For x = 1 To UBound(rayFileList) - 1
+            Call MyMacro(rayFileList(x))
+        Next x
+    End If
+    
+    MsgBox "All files converted"
+    
+End Sub
+
+Private Function MyMacro(strMyFile As String)
+' this gets called once for each file that meets the spec you enter in ForEachPresentation
+' strMyFile is set to the file name each time
+
+    ' Probably at a minimum, you'd want to:
+    Dim oPresentation As Presentation
+    Set oPresentation = Presentations.Open(strMyFile)
+
+    With oPresentation
+
+        Call Convert_PPT_to_imported_images
+
+    End With
+
+    oPresentation.Save
+    oPresentation.Close
+
+End Function
+
+Private Function Convert_PPT_to_imported_images()
     'PURPOSE: convert
     'SOURCE: https://github.com/Kgotso-Koete/Convert_PPT_to_imported_images
     
@@ -9,11 +64,6 @@ Sub Convert_PPT_to_imported_images()
     Dim newSaveFile As String
     
     sPath = ActivePresentation.Path & "\"
-    If Len(sPath) > 0 Then
-        MsgBox "Converting " & ActivePresentation.Name & vbNewLine & "to image presentation"
-    Else
-        MsgBox "File not saved"
-    End If
     
     ' Create a new folder to be used to save images and deleted later
     ' SOURCE: https://www.oreilly.com/library/view/vbscript-in-a/0596004885/re69.html
@@ -77,6 +127,8 @@ Sub Convert_PPT_to_imported_images()
         'Loop through each selected slide
         'Dim objPresentation As Presentation
         Dim objSlide As Slide
+         
+        'Set objPresentation = Presentations.Open(newSaveFile)
     
       For x = 0 To (SelectedSlides.Count - 1)
         'Store each slide to a variable
@@ -94,6 +146,10 @@ Sub Convert_PPT_to_imported_images()
       With PreDELETE
         .SaveAs newSaveFile
       End With
+      
+      With PreDELETE
+        .Close
+      End With
     
     'ERROR HANDLERS
 NoSlideSelection:
@@ -104,9 +160,6 @@ NoSlideSelection:
     Set fso = CreateObject("Scripting.FileSystemObject")
     fso.DeleteFolder (strFolder)
     
-End Sub
+End Function
 
-
-
-
-
+ 
