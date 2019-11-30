@@ -61,12 +61,11 @@ Sub Convert_PPT_to_imported_images()
         Dim objSlide As Slide
         Dim newSaveFile As String
          
-        'newSaveFile = Left(Application.ActivePresentation.FullName, InStr(Application.ActivePresentation.FullName, ".pptm") - 1) & "_CONVERTED.ppt"
         Set objPresentation = Presentations.Open("C:\Users\Kgotso_Koete\Desktop\Test folder\Test.pptx")
     
-      For x = 1 To SelectedSlides.Count
+      For x = 0 To (SelectedSlides.Count - 1)
         'Store each slide to a variable
-        Set sld = SelectedSlides(x)
+        Set sld = SelectedSlides(SelectedSlides.Count - x)
 
     
         Set objSlide = objPresentation.Slides.Add(1, PpSlideLayout.ppLayoutChart)
@@ -87,4 +86,3 @@ NoSlideSelection:
     fso.DeleteFolder (strFolder)
     
 End Sub
- 
